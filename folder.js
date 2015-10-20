@@ -4,8 +4,9 @@ var defaults = require('defaults');
 var through2 = require('through2');
 var mkdirp = require('mkdirp');
 var path = require('path');
+var fs = require('fs');
 
-function folder(folder, opt) {
+function folder(opt) {
     opt = opt || {};
 
     var options = defaults(opt, {
@@ -18,36 +19,49 @@ function folder(folder, opt) {
 
     var cwd = path.resolve(options.cwd);
 
-    function saveFile(file, enc, cb) {
-        var basePath;
-        if (typeof folder === 'string') {
-            basePath = path.resolve(cwd, folder);
-        }
-        if (typeof folder === 'function') {
-            basePath = path.resolve(cwd, folder(file));
-        }
-        var writePath = path.resolve(basePath, file.relative);
-        var writeFolder = path.dirname(writePath);
+    var root = opt.root;
 
-        // wire up new properties
-        file.stat = file.stat ? file.stat : new fs.Stats();
-        file.stat.mode = (options.mode || file.stat.mode);
-        file.cwd = cwd;
-        file.base = basePath;
-        file.path = writePath;
+    loop(opt.folders);
 
-        // mkdirp the folder the file is going in
-        mkdirp(writeFolder, function (err) {
-            if (err) {
-                return cb(err);
+    function loop(folder) {
+        for (var f in folder) {
+            var val = folder[f];
+            if (isObject(val)) {
+                console.log('deep into folder--->>>' + f);
+                loop(val);
+            } else {
+                console.log('make dir--->>>' + f);
+                // mkdirp the folder the file is going in
+                mkDir(val);
             }
-            writeContents(writePath, file, cb);
+        }
+    }
+
+    function mkDir(dir) {
+        mkdirp(cwd + '\\' + root + '\\' + dir, function (err) {
+            if (err) {
+                console.log(err);
+            }
+            //writeContents(writePath, file, cb);
         });
     }
 
-    var stream = through2.obj(saveFile);
+    var stream = through2.obj(function (file, enc, cb) {
+        //every file will go into this
+        cb();
+    }, function (cb) {
+        //last execute
+        cb();
+    });
     stream.resume();
     return stream;
+}
+
+function isObject(value) {
+    // Avoid a V8 JIT bug in Chrome 19-20.
+    // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+    var type = typeof value;
+    return !!value && (type == 'object' || type == 'function');
 }
 
 module.exports = folder;
