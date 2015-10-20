@@ -1,0 +1,29 @@
+{
+  "name": "gulp-folder",
+  "version": "1.0.0",
+  "description": "easy to build your folder structure",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microlv/gulp-folder.git"
+  },
+  "keywords": [
+    "gulp",
+    "gulp-folder"
+  ],
+  "author": "andy.lv@live.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microlv/gulp-folder/issues"
+  },
+  "homepage": "https://github.com/microlv/gulp-folder#readme",
+  "dependencies": {
+    "defaults": "^1.0.3",
+    "mkdirp": "^0.5.1",
+    "path": "^0.12.7",
+    "through2": "^2.0.0"
+  }
+}
