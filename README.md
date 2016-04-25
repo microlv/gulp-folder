@@ -1,9 +1,7 @@
 # gulp-folder
 easy to build your framework
 
-Adjusted so files are not discarded in through2 callback.
-
-Might have a nasty side effect of creating not intended folders if uses src with globs, so it might be something to look into later.
+* npm install
 
 ```js
 
@@ -24,5 +22,6 @@ gulp.task('fw', function () {
     }))
         .pipe(gulp.dest('build/framework'));
 });
+
 
 ```
