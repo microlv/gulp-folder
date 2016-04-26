@@ -48,10 +48,8 @@ function folder(opt) {
 
     var stream = through2.obj(function (file, enc, cb) {
         //every file will go into this
-        cb();
-    }, function (cb) {
-        //last execute
-        cb();
+        // **Kept transform function so it might be used latter.
+        cb(null, file);
     });
     stream.resume();
     return stream;
